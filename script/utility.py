@@ -96,7 +96,7 @@ def calc_chebynet_gso(gso):
         id = sp.identity(gso.shape[0], format='csc')
         eigval_max = max(eigsh(A=gso, k=6, which='LM', return_eigenvectors=False))
     else:
-        id = np.identity(gso.shape[0], dtype=gso.dtype)
+        id = np.identity(gso.shape[0])
         eigval_max = max(eigvals(a=gso).real)
     
     # If the gso is symmetric or random walk normalized Laplacian,
