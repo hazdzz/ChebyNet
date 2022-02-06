@@ -6,7 +6,7 @@ import torch
 
 def calc_gso(dir_adj, gso_type):
     if sp.issparse(dir_adj):
-        id = sp.identity(dir_adj.shape[0], dtype=dir_adj.dtype, format='csc')
+        id = sp.identity(dir_adj.shape[0], format='csc')
         # Symmetrizing an adjacency matrix
         adj = dir_adj + dir_adj.T.multiply(dir_adj.T > dir_adj) - dir_adj.multiply(dir_adj.T > dir_adj)
         #adj = 0.5 * (dir_adj + dir_adj.transpose())
@@ -48,7 +48,7 @@ def calc_gso(dir_adj, gso_type):
             raise ValueError(f'{gso_type} is not defined.')
     
     else:
-        id = np.identity(dir_adj.shape[0], dtype=dir_adj.dtype)
+        id = np.identity(dir_adj.shape[0])
         # Symmetrizing an adjacency matrix
         adj = np.maximum(dir_adj, dir_adj.T)
         #adj = 0.5 * (dir_adj + dir_adj.T)
@@ -76,7 +76,7 @@ def calc_gso(dir_adj, gso_type):
             row_sum = np.sum(adj, axis=1).A1
             row_sum_inv = np.power(row_sum, -1)
             row_sum_inv[np.isinf(row_sum_inv)] = 0.
-            deg_inv = np.diag(row_sum_inv, format='csc')
+            deg_inv = np.diag(row_sum_inv)
             # A_{rw} = D^{-1} * A
             rw_norm_adj = deg_inv.dot(adj)
 
@@ -98,12 +98,13 @@ def calc_chebynet_gso(gso):
     else:
         id = np.identity(gso.shape[0], dtype=gso.dtype)
         eigval_max = max(eigvals(a=gso).real)
+    
     # If the gso is symmetric or random walk normalized Laplacian,
     # then the maximum eigenvalue has to be smaller than or equal to 2.
-    if eigval_max > 2:
-        eigval_max = 2
-
-    gso = 2 * gso / eigval_max - id
+    if eigval_max >= 2:
+        gso = gso - id
+    else:
+        gso = 2 * gso / eigval_max - id
 
     return gso
 
