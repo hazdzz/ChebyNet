@@ -21,7 +21,7 @@ class ChebyNet(nn.Module):
         for k in range(self.K_layer-1):
             x = self.cheb_graph_convs[k](x, gso)
             x = self.relu(x)
-        x = self.dropout(x)
+            x = self.dropout(x)
         x = self.cheb_graph_convs[-1](x, gso)
         x = self.log_softmax(x)
 
