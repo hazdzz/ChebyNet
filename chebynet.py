@@ -33,7 +33,7 @@ def set_env(seed):
 def get_parameters():
     parser = argparse.ArgumentParser(description='ChebyNet')
     parser.add_argument('--enable_cuda', type=bool, default=True, help='enable or disable CUDA, default as True')
-    parser.add_argument('--seed', type=int, default=42, help='set the random seed for stabilize experiment results')
+    parser.add_argument('--seed', type=int, default=42, help='set the random seed for stabilizing experiment results')
     parser.add_argument('--mode', type=str, default='test', choices=['tuning', 'test'], \
                         help='running mode, default as test, tuning as alternative')
     parser.add_argument('--dataset', type=str, default='corar')
