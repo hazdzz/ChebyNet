@@ -11,7 +11,8 @@ def calc_gso(dir_adj, gso_type):
         adj = dir_adj + dir_adj.T.multiply(dir_adj.T > dir_adj) - dir_adj.multiply(dir_adj.T > dir_adj)
         #adj = 0.5 * (dir_adj + dir_adj.transpose())
     
-        if gso_type == 'sym_renorm_adj' or 'rw_renorm_adj' or 'sym_renorm_lap' or 'rw_renorm_lap':
+        if gso_type == 'sym_renorm_adj' or gso_type == 'rw_renorm_adj' \
+            or gso_type == 'sym_renorm_lap' or gso_type == 'rw_renorm_lap':
             adj = adj + id
     
         if gso_type == 'sym_norm_adj' or gso_type == 'sym_renorm_adj' \
@@ -53,7 +54,8 @@ def calc_gso(dir_adj, gso_type):
         adj = np.maximum(dir_adj, dir_adj.T)
         #adj = 0.5 * (dir_adj + dir_adj.T)
 
-        if gso_type == 'sym_renorm_adj' or 'rw_renorm_adj' or 'sym_renorm_lap' or 'rw_renorm_lap':
+        if gso_type == 'sym_renorm_adj' or gso_type == 'rw_renorm_adj' \
+            or gso_type == 'sym_renorm_lap' or gso_type == 'rw_renorm_lap':
             adj = adj + id
 
         if gso_type == 'sym_norm_adj' or gso_type == 'sym_renorm_adj' \
