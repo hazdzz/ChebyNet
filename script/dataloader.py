@@ -3,16 +3,19 @@ import numpy as np
 import scipy.sparse as sp
 
 def norm_feat(feature):
+    feature = feature.astype(dtype=np.float32)
     if sp.issparse(feature):
-        feature = feature.toarray().astype(dtype=np.float32)
+        row_sum = feature.sum(axis=1).A1
+        row_sum_inv = np.power(row_sum, -1)
+        row_sum_inv[np.isinf(row_sum_inv)] = 0.
+        deg_inv = sp.diags(row_sum_inv, format='csc')
+        norm_feature = deg_inv.dot(feature)
     else:
-        feature = feature.astype(dtype=np.float32)
-    row_sum_inv = np.power(np.sum(feature, axis=1), -1)
-    row_sum_inv[np.isinf(row_sum_inv)] = 0.
-    deg_inv = np.diag(row_sum_inv)
-    norm_feature = deg_inv.dot(feature)
-    norm_feature = np.array(norm_feature, dtype=np.float32)
-    norm_feature = sp.csc_matrix(feature)
+        row_sum_inv = np.power(np.sum(feature, axis=1), -1)
+        row_sum_inv[np.isinf(row_sum_inv)] = 0.
+        deg_inv = np.diag(row_sum_inv)
+        norm_feature = deg_inv.dot(feature)
+        norm_feature = np.array(norm_feature, dtype=np.float32)
 
     return norm_feature
 
