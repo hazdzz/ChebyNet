@@ -94,15 +94,17 @@ def calc_gso(dir_adj, gso_type):
     return gso
 
 def calc_chebynet_gso(gso):
-    if sp.issparse(gso):
-        id = sp.identity(gso.shape[0], format='csc')
-        eigval_max = max(eigsh(A=gso, k=6, which='LM', return_eigenvectors=False))
-    else:
-        id = np.identity(gso.shape[0])
-        eigval_max = max(eigvals(a=gso).real)
+    # if sp.issparse(gso):
+    #     id = sp.identity(gso.shape[0], format='csc')
+    #     eigval_max = max(eigsh(A=gso, k=6, which='LM', return_eigenvectors=False))
+    # else:
+    #     id = np.identity(gso.shape[0])
+    #     eigval_max = max(eigvals(a=gso).real)
     
-    # If the gso is symmetric or random walk normalized Laplacian,
-    # then the maximum eigenvalue has to be smaller than or equal to 2.
+    # Since the GSO is symmetric, its maximum eigenvalue is equal to its L2 norm.
+    eigval_max = torch.norm(gso)
+    
+    # The maximum eigenvalue has to be smaller than or equal to 2.
     if eigval_max >= 2:
         gso = gso - id
     else:
