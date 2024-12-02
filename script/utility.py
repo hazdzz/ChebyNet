@@ -102,13 +102,10 @@ def calc_chebynet_gso(gso):
     #     eigval_max = max(eigvals(a=gso).real)
     
     # Since the GSO is symmetric, its maximum eigenvalue is equal to its L2 norm.
-    eigval_max = torch.norm(gso)
+    eigval_max = torch.norm(gso, p=2)
     
     # The maximum eigenvalue has to be smaller than or equal to 2.
-    if eigval_max >= 2:
-        gso = gso - id
-    else:
-        gso = 2 * gso / eigval_max - id
+    gso = 2 * gso / eigval_max - id
 
     return gso
 
